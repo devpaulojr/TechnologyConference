@@ -1,6 +1,6 @@
-package com.devpaulojr.technologyconference.mappers;
+package com.devpaulojr.technologyconference.controllers.mappers;
 
-import com.devpaulojr.technologyconference.dtos.UserDto;
+import com.devpaulojr.technologyconference.controllers.dtos.UserDto;
 import com.devpaulojr.technologyconference.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

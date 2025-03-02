@@ -1,4 +1,4 @@
-package com.devpaulojr.technologyconference.dtos;
+package com.devpaulojr.technologyconference.controllers.dtos;
 
 import jakarta.validation.constraints.*;
 
