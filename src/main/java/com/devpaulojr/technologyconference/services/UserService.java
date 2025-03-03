@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @Service
@@ -16,4 +17,14 @@ public class UserService {
     public List<User> findAll(){
         return repository.findAll();
     }
+
+    public User insert(User user){
+
+        if(!Objects.equals(user.getPassword(), user.getConfirmPassword())){
+            throw new IllegalArgumentException("senha errada.");
+        }
+
+        return repository.save(user);
+    }
+
 }

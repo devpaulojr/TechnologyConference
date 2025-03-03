@@ -1,6 +1,11 @@
 package com.devpaulojr.technologyconference.controllers.dtos;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -23,7 +28,15 @@ public record UserDto(
         String email,
 
         @NotBlank(message = "valores não pode ser vazios")
-        @Size(message = "celular inválido.", min = 20, max = 20)
+        @Size(message = "tamanho fora do padrão.", min = 1, max = 100)
+        String password,
+
+        @NotBlank(message = "valores não pode ser vazios")
+        @Size(message = "tamanho fora do padrão.", min = 1, max = 100)
+        String confirmPassword,
+
+        @NotBlank(message = "valores não pode ser vazios")
+        @Size(message = "celular inválido.", min = 11, max = 11)
         String phoneNumber,
 
         @NotNull(message = "valores inválido.")
