@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
@@ -37,12 +38,42 @@ public class UserController implements UriGenerator {
     @PostMapping
     public ResponseEntity<Void> insert(@RequestBody @Valid UserDto userDto) {
 
-        User user = userMapper.toEntity(userDto);
+        var user = userMapper.toEntity(userDto);
 
         user = service.insert(user);
 
         URI uri = uriGenerator(user.getId());
 
         return ResponseEntity.created(uri).build();
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<Void> update(@PathVariable UUID id, @RequestBody UserDto userDto){
+
+        var idFound = service.findById(id);
+
+        if(idFound == null){
+            return ResponseEntity.notFound().build();
+        }
+
+        var user = userMapper.toEntity(userDto);
+
+        service.update(user, id);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable UUID id){
+
+        var idFound = service.findById(id);
+
+        if(idFound == null){
+            return ResponseEntity.notFound().build();
+        }
+
+        service.deleteById(id);
+
+        return ResponseEntity.noContent().build();
     }
 }
