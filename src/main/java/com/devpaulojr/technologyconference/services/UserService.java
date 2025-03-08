@@ -3,12 +3,15 @@ package com.devpaulojr.technologyconference.services;
 import com.devpaulojr.technologyconference.model.User;
 import com.devpaulojr.technologyconference.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+
+import static com.devpaulojr.technologyconference.services.specs.UserSpecification.*;
 
 @RequiredArgsConstructor
 @Service
@@ -71,6 +74,39 @@ public class UserService {
     public void deleteById(UUID id){
 
         repository.deleteById(id);
+
+    }
+
+    public List<User> specification(String firstName,
+                                    String lastName,
+                                    String email,
+                                    String phoneNumber,
+                                    Boolean vip){
+
+        Specification<User> specs = Specification
+                .where( ((root, query, cb) -> cb.conjunction()) );
+
+        if(firstName != null){
+            specs = specs.and(likeFirstName(firstName));
+        }
+
+        if(lastName != null){
+            specs = specs.and(likeLastName(lastName));
+        }
+
+        if(email != null){
+            specs = specs.and(equalEmail(email));
+        }
+
+        if(phoneNumber != null){
+            specs = specs.and(equalPhoneNumber(phoneNumber));
+        }
+
+        if(vip != null){
+            specs = specs.and(equalVip(vip));
+        }
+
+        return repository.findAll(specs);
     }
 
 }
