@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -41,6 +42,16 @@ public class UserController implements UriGenerator {
         List<UserCreatedDto> userCreateDtos = userList.stream().map(userCreatedMapper::toDto).toList();
 
         return ResponseEntity.ok().body(userCreateDtos);
+    }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<UserCreatedDto> findById(@PathVariable UUID id){
+
+        User user = service.findById(id);
+
+        UserCreatedDto dto = userCreatedMapper.toDto(user);
+
+        return ResponseEntity.ok().body(dto);
     }
 
     @GetMapping(value = "/filter")
