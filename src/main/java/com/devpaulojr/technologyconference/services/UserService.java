@@ -74,7 +74,6 @@ public class UserService {
     public void deleteById(UUID id){
 
         repository.deleteById(id);
-
     }
 
     public List<User> specification(String firstName,

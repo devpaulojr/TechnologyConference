@@ -14,32 +14,32 @@ public record UserDto(
 
         UUID id,
 
-        @NotBlank(message = "valores não pode ser vazios")
-        @Size(message = "tamanho fora do padrão.", min = 1, max = 80)
+        @NotBlank(message = "primeiro nome não pode ser vazios")
+        @Size(message = "Primeiro nome inválido, tente outra nome", min = 1, max = 80)
         String firstName,
 
-        @NotBlank(message = "valores não pode ser vazios")
-        @Size(message = "tamanho fora do padrão.", min = 1, max = 80)
+        @NotBlank(message = "Sobrenome não pode ser vazios")
+        @Size(message = "Sobrenome inválido, tente outra nome", min = 1, max = 80)
         String lastName,
 
-        @NotBlank(message = "valores não pode ser vazios")
-        @Size(message = "tamanho fora do padrão.", min = 1, max = 100)
-        @Email(message = "email inválido.")
+        @NotBlank(message = "E-mail não pode ser vazios")
+        @Size(message = "E-mail inválida, tente outra email", min = 1, max = 100)
+        @Email(message = "E-mail inválido.")
         String email,
 
-        @NotBlank(message = "valores não pode ser vazios")
-        @Size(message = "tamanho fora do padrão.", min = 1, max = 100)
+        @NotBlank(message = "Usuário ou senha incorretos.")
+        @Size(message = "Senha inválida, tente outra senha", min = 1, max = 100)
         String password,
 
-        @NotBlank(message = "valores não pode ser vazios")
-        @Size(message = "tamanho fora do padrão.", min = 1, max = 100)
+        @NotBlank(message = "Usuário ou senha incorretos.")
+        @Size(message = "Senha inválida, tente outra senha", min = 1, max = 100)
         String confirmPassword,
 
-        @NotBlank(message = "valores não pode ser vazios")
-        @Size(message = "celular inválido.", min = 11, max = 11)
+        @NotBlank(message = "Celular não pode ser vazio")
+        @Size(message = "Celular inválido, tente outra telefone", min = 11, max = 11)
         String phoneNumber,
 
-        @NotNull(message = "valores inválido.")
+        @NotNull(message = "Vip inválido, preencher o valor")
         Boolean vip,
 
         @PastOrPresent(message = "data não pode ser superior o dia de hoje.")
