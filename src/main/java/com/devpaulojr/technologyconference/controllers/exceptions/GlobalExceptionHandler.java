@@ -3,6 +3,7 @@ package com.devpaulojr.technologyconference.controllers.exceptions;
 import com.devpaulojr.technologyconference.controllers.exceptions.dto.ErrorInside;
 import com.devpaulojr.technologyconference.controllers.exceptions.dto.ErrorOut;
 import jakarta.servlet.http.HttpServletRequest;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -28,9 +29,8 @@ public class GlobalExceptionHandler {
                 .map(error -> new ErrorInside(error.getField(), error.getDefaultMessage()))
                 .toList();
 
-
-        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
         Instant timestamp = Instant.now();
+        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
 
         return new ErrorOut(
                 timestamp,
@@ -38,5 +38,23 @@ public class GlobalExceptionHandler {
                 path.getRequestURI(),
                 errorInsides
         );
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ErrorOut ConstraintViolationException(ConstraintViolationException exception,
+                                             HttpServletRequest path){
+
+
+        Instant timestamp = Instant.now();
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        return new ErrorOut(
+               timestamp,
+               status.value(),
+               path.getRequestURI(),
+               List.of()
+        );
+
     }
 }
