@@ -1,0 +1,7 @@
+package com.devpaulojr.technologyconference.controllers.exceptions;
+
+public class ResourceNotFoundException extends RuntimeException {
+    public ResourceNotFoundException(String message) {
+        super(message);
+    }
+}

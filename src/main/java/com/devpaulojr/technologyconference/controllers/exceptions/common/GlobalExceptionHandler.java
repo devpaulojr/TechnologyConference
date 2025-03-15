@@ -1,5 +1,6 @@
-package com.devpaulojr.technologyconference.controllers.exceptions;
+package com.devpaulojr.technologyconference.controllers.exceptions.common;
 
+import com.devpaulojr.technologyconference.controllers.exceptions.ResourceNotFoundException;
 import com.devpaulojr.technologyconference.controllers.exceptions.dto.ErrorInside;
 import com.devpaulojr.technologyconference.controllers.exceptions.dto.ErrorOut;
 import jakarta.servlet.http.HttpServletRequest;
@@ -7,6 +8,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.time.Instant;
 import java.util.List;
 
+@ControllerAdvice
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -42,9 +45,8 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
-    public ErrorOut ConstraintViolationException(ConstraintViolationException exception,
+    public ErrorOut constraintViolationException(ConstraintViolationException exception,
                                              HttpServletRequest path){
-
 
         Instant timestamp = Instant.now();
         HttpStatus status = HttpStatus.BAD_REQUEST;
@@ -54,6 +56,23 @@ public class GlobalExceptionHandler {
                status.value(),
                path.getRequestURI(),
                List.of()
+        );
+
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ErrorOut handleResourceNotFoundException(ResourceNotFoundException exception,
+                                                HttpServletRequest path) {
+
+        Instant timestamp = Instant.now();
+        HttpStatus status = HttpStatus.NOT_FOUND;
+
+        return new ErrorOut(
+                timestamp,
+                status.value(),
+                path.getRequestURI(),
+                List.of()
         );
 
     }

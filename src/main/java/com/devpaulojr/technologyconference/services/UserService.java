@@ -1,5 +1,6 @@
 package com.devpaulojr.technologyconference.services;
 
+import com.devpaulojr.technologyconference.controllers.exceptions.ResourceNotFoundException;
 import com.devpaulojr.technologyconference.model.User;
 import com.devpaulojr.technologyconference.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,13 +25,8 @@ public class UserService {
     }
 
     public User findById(UUID id){
-
-        Optional<User> idFound = repository.findById(id);
-
-        if(idFound.isPresent()){
-            return idFound.get();
-        }
-        throw new IllegalArgumentException("id inválido.");
+        return repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado " + id));
     }
 
     public User insert(User user){
@@ -104,7 +100,6 @@ public class UserService {
         if(vip != null){
             specs = specs.and(equalVip(vip));
         }
-
         return repository.findAll(specs);
     }
 
