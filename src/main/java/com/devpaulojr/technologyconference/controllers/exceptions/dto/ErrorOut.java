@@ -7,5 +7,6 @@ public record ErrorOut(
         Instant timestamp,
         int status,
         String path,
+        String message,
         List<ErrorInside> erros) {
 }

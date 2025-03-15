@@ -34,11 +34,13 @@ public class GlobalExceptionHandler {
 
         Instant timestamp = Instant.now();
         HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+        String message = "A requisição foi processada, mas contém erros de validação. Verifique os dados enviados.";
 
         return new ErrorOut(
                 timestamp,
                 status.value(),
                 path.getRequestURI(),
+                message,
                 errorInsides
         );
     }
@@ -50,11 +52,13 @@ public class GlobalExceptionHandler {
 
         Instant timestamp = Instant.now();
         HttpStatus status = HttpStatus.BAD_REQUEST;
+        String message = "A requisição não pôde ser processada devido a dados inválidos. Corrija e tente novamente.";
 
         return new ErrorOut(
                timestamp,
                status.value(),
                path.getRequestURI(),
+               message,
                List.of()
         );
 
@@ -62,16 +66,18 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ErrorOut handleResourceNotFoundException(ResourceNotFoundException exception,
-                                                HttpServletRequest path) {
+    public ErrorOut resourceNotFoundException(ResourceNotFoundException exception,
+                                          HttpServletRequest path) {
 
         Instant timestamp = Instant.now();
         HttpStatus status = HttpStatus.NOT_FOUND;
+        String message = "O recurso solicitado não foi encontrado. Verifique a URL ou os parâmetros informados.";
 
         return new ErrorOut(
                 timestamp,
                 status.value(),
                 path.getRequestURI(),
+                message,
                 List.of()
         );
 
