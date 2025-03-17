@@ -12,43 +12,41 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id")
 @EntityListeners(AuditingEntityListener.class)
+@EqualsAndHashCode(of = "id")
 @Entity
-@Table(name = "users")
-public class User implements Serializable {
+@Table(name = "company")
+public class Company implements Serializable {
 
     @Id
-    @Column(name = "id_user")
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "first_name", nullable = false)
-    private String firstName;
-
-    @Column(name = "last_name", nullable = false)
-    private String lastName;
+    @Column(nullable = false)
+    private String name;
 
     @Column(nullable = false, unique = true)
-    private String email;
-
-    @Column(nullable = false, unique = true)
-    private String password;
-
-    @Column(name = "confirm_password", nullable = false)
-    private String confirmPassword;
-
-    @Column(name = "phone_number", nullable = false, unique = true)
-    private String phoneNumber;
+    private String cnpj;
 
     @Column(nullable = false)
-    private Boolean vip;
+    private String address;
+
+    @Column(nullable = false)
+    private String neighborhood;
+
+    @Column(nullable = false)
+    private String city;
+
+    @Column(nullable = false)
+    private String state;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false)
@@ -58,7 +56,6 @@ public class User implements Serializable {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    @JoinColumn(name = "id_company")
-    @ManyToOne
-    private Company company;
+    @OneToMany(mappedBy = "company")
+    private Set<User> users = new HashSet<>();
 }
