@@ -57,4 +57,12 @@ public class CompanyController implements UriGenerator {
 
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable UUID id){
+
+        service.deleteById(id);
+
+        return ResponseEntity.noContent().build();
+    }
 }

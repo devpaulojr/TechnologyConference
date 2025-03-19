@@ -49,4 +49,12 @@ public class CompanyService {
         }
 
     }
+
+    public void deleteById(UUID id){
+
+        Optional<Company> company = Optional.ofNullable(repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Não foi possível achar o id: " + id)));
+
+        repository.deleteById(id);
+    }
 }
