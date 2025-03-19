@@ -5,6 +5,7 @@ import com.devpaulojr.technologyconference.controllers.exceptions.dto.ErrorInsid
 import com.devpaulojr.technologyconference.controllers.exceptions.dto.ErrorOut;
 import jakarta.servlet.http.HttpServletRequest;
 import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -92,6 +93,24 @@ public class GlobalExceptionHandler {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         String message = "Ocorreu um erro inesperado no servidor. " +
                 "Tente novamente mais tarde. Se o problema persistir, entre em contato com o suporte.";
+
+        return new ErrorOut(
+                timestamp,
+                status.value(),
+                path.getRequestURI(),
+                message,
+                List.of()
+        );
+    }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ErrorOut dataIntegrityViolationException(DataIntegrityViolationException exception,
+                                                HttpServletRequest path){
+
+        Instant timestamp = Instant.now();
+        HttpStatus status = HttpStatus.CONFLICT;
+        String message = "O recurso não pôde ser processado devido a um conflito. Verifique os dados e tente novamente.";
 
         return new ErrorOut(
                 timestamp,
