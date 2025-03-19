@@ -33,6 +33,7 @@ public class UserController implements UriGenerator {
     private final UserMapper userMapper;
     private final UserCreatedMapper userCreatedMapper;
 
+
     @GetMapping
     public ResponseEntity<List<UserCreatedDto>> findAll(){
 
@@ -46,7 +47,7 @@ public class UserController implements UriGenerator {
     @GetMapping(value = "/{id}")
     public ResponseEntity<UserCreatedDto> findById(@PathVariable UUID id){
 
-        User user = service.findById(id);
+        var user = service.findById(id);
 
         UserCreatedDto dto = userCreatedMapper.toDto(user);
 
@@ -83,12 +84,6 @@ public class UserController implements UriGenerator {
     @PutMapping(value = "/{id}")
     public ResponseEntity<Void> update(@PathVariable UUID id, @RequestBody UserDto userDto){
 
-        var idFound = service.findById(id);
-
-        if(idFound == null){
-            return ResponseEntity.notFound().build();
-        }
-
         var user = userMapper.toEntity(userDto);
 
         service.update(user, id);
@@ -98,12 +93,6 @@ public class UserController implements UriGenerator {
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable UUID id){
-
-        var idFound = service.findById(id);
-
-        if(idFound == null){
-            return ResponseEntity.notFound().build();
-        }
 
         service.deleteById(id);
 

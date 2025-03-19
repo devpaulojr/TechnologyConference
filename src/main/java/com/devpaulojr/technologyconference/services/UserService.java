@@ -20,6 +20,7 @@ public class UserService {
 
     private final UserRepository repository;
 
+
     public List<User> findAll(){
         return repository.findAll();
     }
@@ -46,7 +47,7 @@ public class UserService {
             repository.save(userFound.get());
             return;
         }
-        throw new IllegalArgumentException("usuário não encontrado.");
+        throw new ResourceNotFoundException("Não foi possível achar o id: " + id);
     }
 
     private void updated(Optional<User> userFound , User user) {
@@ -68,6 +69,9 @@ public class UserService {
     }
 
     public void deleteById(UUID id){
+
+        Optional<User> user = Optional.ofNullable(repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Não foi possível achar o id: " + id)));
 
         repository.deleteById(id);
     }
