@@ -21,6 +21,16 @@ public class CompanyService {
         return repository.findAll();
     }
 
+    public Company findById(UUID id){
+
+        Optional<Company> company = repository.findById(id);
+
+        if(company.isPresent()){
+            return company.get();
+        }
+        throw new ResourceNotFoundException("Não foi possível achar o id: " + id);
+    }
+
     public Company insert(Company company){
         return repository.save(company);
     }
@@ -34,7 +44,6 @@ public class CompanyService {
             return repository.save(entity.get());
         }
         throw new ResourceNotFoundException("Não foi possível achar o id: " + id);
-
     }
 
     private void updated(Optional<Company> entity, Company company) {
@@ -47,7 +56,6 @@ public class CompanyService {
             Optional.ofNullable(company.getCity()).ifPresent(entity.get()::setCity);
             Optional.ofNullable(company.getState()).ifPresent(entity.get()::setState);
         }
-
     }
 
     public void deleteById(UUID id){
