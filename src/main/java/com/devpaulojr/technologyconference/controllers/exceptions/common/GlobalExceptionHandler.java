@@ -84,15 +84,14 @@ public class GlobalExceptionHandler {
 
     }
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(RuntimeException.class)
-    public ErrorOut internalServerErrorException(RuntimeException exception,
-                                    HttpServletRequest path){
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ErrorOut dataIntegrityViolationException(DataIntegrityViolationException exception,
+                                                HttpServletRequest path){
 
         Instant timestamp = Instant.now();
-        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-        String message = "Ocorreu um erro inesperado no servidor. " +
-                "Tente novamente mais tarde. Se o problema persistir, entre em contato com o suporte.";
+        HttpStatus status = HttpStatus.CONFLICT;
+        String message = "O recurso não pôde ser processado devido a um conflito. Verifique os dados e tente novamente.";
 
         return new ErrorOut(
                 timestamp,
@@ -103,14 +102,15 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ResponseStatus(HttpStatus.CONFLICT)
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ErrorOut dataIntegrityViolationException(DataIntegrityViolationException exception,
-                                                HttpServletRequest path){
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(RuntimeException.class)
+    public ErrorOut internalServerErrorException(RuntimeException exception,
+                                                 HttpServletRequest path){
 
         Instant timestamp = Instant.now();
-        HttpStatus status = HttpStatus.CONFLICT;
-        String message = "O recurso não pôde ser processado devido a um conflito. Verifique os dados e tente novamente.";
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        String message = "Ocorreu um erro inesperado no servidor. " +
+                "Tente novamente mais tarde. Se o problema persistir, entre em contato com o suporte.";
 
         return new ErrorOut(
                 timestamp,
