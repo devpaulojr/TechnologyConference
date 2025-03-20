@@ -4,6 +4,7 @@ import com.devpaulojr.technologyconference.controllers.exceptions.ResourceNotFou
 import com.devpaulojr.technologyconference.model.User;
 import com.devpaulojr.technologyconference.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +34,7 @@ public class UserService {
     public User insert(User user){
 
         if(!Objects.equals(user.getPassword(), user.getConfirmPassword())){
-            throw new IllegalArgumentException("senha/usuário errados.");
+            throw new DataIntegrityViolationException("Senha/Usuário incorretos");
         }
         return repository.save(user);
     }
@@ -61,9 +62,8 @@ public class UserService {
             Optional.ofNullable(user.getConfirmPassword()).ifPresent(userFound.get()::setConfirmPassword);
 
             if(!Objects.equals(userFound.get().getPassword(), userFound.get().getConfirmPassword())){
-                throw new IllegalArgumentException("senha/usuário errados.");
+                throw new DataIntegrityViolationException("Senha/Usuário incorretos");
             }
-
             Optional.ofNullable(user.getPhoneNumber()).ifPresent(userFound.get()::setPhoneNumber);
         }
     }
