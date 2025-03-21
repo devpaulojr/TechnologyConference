@@ -28,7 +28,7 @@ public class UserService {
 
     public User findById(UUID id){
         return repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Não foi possível achar o id: " + id));
     }
 
     public User insert(User user){

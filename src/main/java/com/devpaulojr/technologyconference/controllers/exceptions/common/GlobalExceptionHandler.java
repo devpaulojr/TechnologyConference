@@ -3,6 +3,8 @@ package com.devpaulojr.technologyconference.controllers.exceptions.common;
 import com.devpaulojr.technologyconference.controllers.exceptions.ResourceNotFoundException;
 import com.devpaulojr.technologyconference.controllers.exceptions.dto.ErrorInside;
 import com.devpaulojr.technologyconference.controllers.exceptions.dto.ErrorOut;
+import com.devpaulojr.technologyconference.controllers.exceptions.dto.StandardError;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.servlet.http.HttpServletRequest;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -15,11 +17,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @ControllerAdvice
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler implements CustomErrorMessage {
 
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -67,44 +71,55 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ErrorOut resourceNotFoundException(ResourceNotFoundException exception,
+    public StandardError resourceNotFoundException(ResourceNotFoundException exception,
                                           HttpServletRequest path) {
 
         Instant timestamp = Instant.now();
         HttpStatus status = HttpStatus.NOT_FOUND;
-        String message = "O recurso solicitado não foi encontrado. Verifique a URL ou os parâmetros informados.";
+        String defaultMessage = "O recurso solicitado não foi encontrado. Verifique a URL ou os parâmetros informados.";
 
-        return new ErrorOut(
+        Throwable rootCause = exception.initCause(exception.getCause());
+
+        String detailsMessage = (rootCause != null) ? rootCause.getMessage().substring(29, 64) : defaultMessage;
+
+        return new StandardError(
                 timestamp,
                 status.value(),
                 path.getRequestURI(),
-                message,
-                List.of()
+                "Error: " + detailsMessage,
+                Collections.singletonList(Objects.requireNonNull(rootCause).getMessage())
         );
 
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ErrorOut dataIntegrityViolationException(DataIntegrityViolationException exception,
-                                                HttpServletRequest path){
+    public StandardError dataIntegrityViolationException(DataIntegrityViolationException exception,
+                                                         HttpServletRequest path){
 
         Instant timestamp = Instant.now();
         HttpStatus status = HttpStatus.CONFLICT;
-        String message = "O recurso não pôde ser processado devido a um conflito. Verifique os dados e tente novamente.";
+        String defaultMessage = "O recurso não pôde ser processado devido a um conflito. Verifique os dados e tente " +
+                "novamente.";
 
-        return new ErrorOut(
+        Throwable rootCause = exception.getRootCause();
+        String detailedMessage = (rootCause != null) ? rootCause.toString() : defaultMessage;
+
+        String fieldError = errorMessage(detailedMessage);
+        String detailsFieldError = errorMessageDetails(detailedMessage);
+
+        return new StandardError(
                 timestamp,
                 status.value(),
                 path.getRequestURI(),
-                message,
-                List.of()
+                "Erro de integridade de dados no campo: " + fieldError,
+                Collections.singletonList(detailsFieldError)
         );
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(RuntimeException.class)
-    public ErrorOut internalServerErrorException(RuntimeException exception,
+    public StandardError internalServerErrorException(RuntimeException exception,
                                                  HttpServletRequest path){
 
         Instant timestamp = Instant.now();
@@ -112,7 +127,7 @@ public class GlobalExceptionHandler {
         String message = "Ocorreu um erro inesperado no servidor. " +
                 "Tente novamente mais tarde. Se o problema persistir, entre em contato com o suporte.";
 
-        return new ErrorOut(
+        return new StandardError(
                 timestamp,
                 status.value(),
                 path.getRequestURI(),
