@@ -4,11 +4,14 @@ import com.devpaulojr.technologyconference.controllers.exceptions.ResourceNotFou
 import com.devpaulojr.technologyconference.model.Company;
 import com.devpaulojr.technologyconference.repositories.CompanyRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import static com.devpaulojr.technologyconference.services.specs.CompanySpecification.*;
 
 @RequiredArgsConstructor
 @Service
@@ -32,6 +35,9 @@ public class CompanyService {
     }
 
     public Company insert(Company company){
+
+        company.setState(company.getState().toUpperCase());
+
         return repository.save(company);
     }
 
@@ -64,5 +70,42 @@ public class CompanyService {
                 .orElseThrow(() -> new ResourceNotFoundException("Não foi possível achar o id: " + id)));
 
         repository.deleteById(id);
+    }
+
+    public List<Company> specification(String name,
+                                       String cnpj,
+                                       String address,
+                                       String neighborhood,
+                                       String city,
+                                       String state){
+
+        Specification<Company> specs = Specification
+                .where(((root, query, cb) -> cb.conjunction()));
+
+
+        if(name != null){
+            specs = specs.and(likeName(name));
+        }
+
+        if(cnpj != null){
+            specs = specs.and(equalCnpj(cnpj));
+        }
+
+        if(address != null){
+            specs = specs.and(likeAddress(address));
+        }
+
+        if(neighborhood != null){
+            specs = specs.and(likeNeighborhood(neighborhood));
+        }
+
+        if(city != null){
+            specs = specs.and(likeCity(city));
+        }
+
+        if(state != null){
+            specs = specs.and(equalState(state));
+        }
+        return repository.findAll(specs);
     }
 }

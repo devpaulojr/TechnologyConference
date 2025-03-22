@@ -8,14 +8,7 @@ import com.devpaulojr.technologyconference.services.CompanyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
@@ -51,6 +44,25 @@ public class CompanyController implements UriGenerator {
         CompanyDto dto = mapper.toDto(company);
 
         return ResponseEntity.ok().body(dto);
+    }
+
+    @GetMapping(value = "/filter")
+    public ResponseEntity<List<CompanyDto>> specification(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "cnpj", required = false) String cnpj,
+            @RequestParam(value = "address", required = false) String address,
+            @RequestParam(value = "neighborhood", required = false) String neighborhood,
+            @RequestParam(value = "city", required = false) String city,
+            @RequestParam(value = "state", required = false) String state){
+
+        var specification = service.specification(name, cnpj, address, neighborhood, city, state);
+
+        List<CompanyDto> dtos = specification
+                .stream()
+                .map(mapper::toDto)
+                .toList();
+
+        return ResponseEntity.ok(dtos);
     }
 
     @PostMapping
