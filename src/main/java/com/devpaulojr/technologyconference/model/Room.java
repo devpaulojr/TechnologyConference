@@ -2,15 +2,7 @@ package com.devpaulojr.technologyconference.model;
 
 import com.devpaulojr.technologyconference.model.enums.RoomStatus;
 import com.devpaulojr.technologyconference.model.enums.RoomType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -62,4 +54,8 @@ public class Room implements Serializable {
     @LastModifiedDate
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "company_id", referencedColumnName = "id")
+    private Company company;
 }
