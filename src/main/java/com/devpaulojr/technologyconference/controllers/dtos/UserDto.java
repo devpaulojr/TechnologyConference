@@ -49,6 +49,6 @@ public record UserDto(
         @FutureOrPresent(message = "data não pode ser inferior ao dia de hoje.")
         LocalDateTime updatedAt,
 
-        Company company
+        CompanyDto company
 ) {
 }
