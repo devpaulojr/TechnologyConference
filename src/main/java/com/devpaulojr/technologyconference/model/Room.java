@@ -30,13 +30,13 @@ public class Room implements Serializable {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "number_rooms", nullable = false)
+    @Column(name = "number_rooms")
     private Integer numberRooms;
 
-    @Column(name = "seat_capacity", nullable = false)
+    @Column(name = "seat_capacity")
     private Integer seatCapacity;
 
-    @Column(name = "is_occupied", nullable = false)
+    @Column(name = "is_occupied")
     private Boolean isOccupied;
 
     @Enumerated(EnumType.STRING)
@@ -56,6 +56,6 @@ public class Room implements Serializable {
     private LocalDateTime updatedAt;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "company_id", referencedColumnName = "id")
+    @JoinColumn(name = "company_id", referencedColumnName = "id", nullable = false)
     private Company company;
 }
