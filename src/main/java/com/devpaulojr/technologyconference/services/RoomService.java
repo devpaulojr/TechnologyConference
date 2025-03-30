@@ -1,5 +1,6 @@
 package com.devpaulojr.technologyconference.services;
 
+import com.devpaulojr.technologyconference.controllers.exceptions.BadRequestException;
 import com.devpaulojr.technologyconference.controllers.exceptions.ResourceNotFoundException;
 import com.devpaulojr.technologyconference.model.Room;
 import com.devpaulojr.technologyconference.model.enums.RoomStatus;
@@ -25,6 +26,10 @@ public class RoomService {
     }
 
     public Room insert(Room room) {
+
+        if(room.getRoomType() == null){
+            throw new BadRequestException("Valor da sala inválido: " + null);
+        }
 
         if (room.getCompany() != null && room.getCompany().getId() != null) {
             var company = companyRepository.findById(room.getCompany().getId())

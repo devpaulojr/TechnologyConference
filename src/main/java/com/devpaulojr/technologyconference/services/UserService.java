@@ -1,5 +1,6 @@
 package com.devpaulojr.technologyconference.services;
 
+import com.devpaulojr.technologyconference.controllers.exceptions.BadRequestException;
 import com.devpaulojr.technologyconference.controllers.exceptions.ResourceNotFoundException;
 import com.devpaulojr.technologyconference.model.User;
 import com.devpaulojr.technologyconference.repositories.UserRepository;
@@ -34,7 +35,7 @@ public class UserService {
     public User insert(User user){
 
         if(!Objects.equals(user.getPassword(), user.getConfirmPassword())){
-            throw new DataIntegrityViolationException("Senha/Usuário incorretos");
+            throw new BadRequestException("Usuário ou senha inválidos. Verifique e tente novamente.");
         }
         return repository.save(user);
     }

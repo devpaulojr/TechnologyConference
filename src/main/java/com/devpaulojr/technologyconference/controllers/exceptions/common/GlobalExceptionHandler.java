@@ -1,12 +1,12 @@
 package com.devpaulojr.technologyconference.controllers.exceptions.common;
 
+import com.devpaulojr.technologyconference.controllers.exceptions.BadRequestException;
 import com.devpaulojr.technologyconference.controllers.exceptions.ResourceNotFoundException;
 import com.devpaulojr.technologyconference.controllers.exceptions.dto.ErrorInside;
 import com.devpaulojr.technologyconference.controllers.exceptions.dto.ErrorOut;
 import com.devpaulojr.technologyconference.controllers.exceptions.dto.StandardError;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.devpaulojr.technologyconference.controllers.util.CustomErrorMessage;
 import jakarta.servlet.http.HttpServletRequest;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -51,20 +51,25 @@ public class GlobalExceptionHandler implements CustomErrorMessage {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ErrorOut constraintViolationException(ConstraintViolationException exception,
+    @ExceptionHandler(BadRequestException.class)
+    public StandardError constraintViolationException(BadRequestException exception,
                                              HttpServletRequest path){
 
         Instant timestamp = Instant.now();
         HttpStatus status = HttpStatus.BAD_REQUEST;
-        String message = "A requisição não pôde ser processada devido a dados inválidos. Corrija e tente novamente.";
+        String defaultMessage = "A requisição não pôde ser processada devido a dados inválidos. Corrija e tente " +
+                "novamente.";
 
-        return new ErrorOut(
-               timestamp,
-               status.value(),
-               path.getRequestURI(),
-               message,
-               List.of()
+        Throwable rootCause = exception.initCause(exception.getCause());
+
+        String detailsMessage = (rootCause != null) ? rootCause.getMessage() : defaultMessage;
+
+        return new StandardError(
+                timestamp,
+                status.value(),
+                path.getRequestURI(),
+                defaultMessage,
+                Collections.singletonList(detailsMessage)
         );
 
     }
@@ -95,7 +100,7 @@ public class GlobalExceptionHandler implements CustomErrorMessage {
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(DataIntegrityViolationException.class)
     public StandardError dataIntegrityViolationException(DataIntegrityViolationException exception,
-                                                         HttpServletRequest path){
+                                                     HttpServletRequest path){
 
         Instant timestamp = Instant.now();
         HttpStatus status = HttpStatus.CONFLICT;
@@ -105,8 +110,8 @@ public class GlobalExceptionHandler implements CustomErrorMessage {
         Throwable rootCause = exception.getRootCause();
         String detailedMessage = (rootCause != null) ? rootCause.toString() : defaultMessage;
 
-        String fieldError = errorMessage(detailedMessage);
-        String detailsFieldError = errorMessageDetails(detailedMessage);
+        String fieldError = errorMessageConflict(detailedMessage);
+        String detailsFieldError = errorMessageDetailsConflict(detailedMessage);
 
         return new StandardError(
                 timestamp,

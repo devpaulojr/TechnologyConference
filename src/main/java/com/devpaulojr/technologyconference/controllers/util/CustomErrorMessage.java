@@ -1,11 +1,14 @@
-package com.devpaulojr.technologyconference.controllers.exceptions.common;
+package com.devpaulojr.technologyconference.controllers.util;
+
+import org.springframework.stereotype.Component;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Component
 public interface CustomErrorMessage {
 
-    default String errorMessage(String message){
+    default String errorMessageConflict(String message){
 
         Pattern pattern = Pattern.compile("violates unique constraint \"(.*?)\"");
 
@@ -17,7 +20,7 @@ public interface CustomErrorMessage {
         return "Desconhecido";
     }
 
-    default String errorMessageDetails(String message){
+    default String errorMessageDetailsConflict(String message){
 
         Pattern pattern = Pattern.compile("ERROR: duplicate key value violates unique constraint \"([^\"]+)\"");
 

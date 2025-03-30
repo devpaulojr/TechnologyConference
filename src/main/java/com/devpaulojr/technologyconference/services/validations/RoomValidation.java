@@ -1,5 +1,6 @@
 package com.devpaulojr.technologyconference.services.validations;
 
+import com.devpaulojr.technologyconference.controllers.exceptions.BadRequestException;
 import com.devpaulojr.technologyconference.model.Room;
 import com.devpaulojr.technologyconference.model.enums.RoomStatus;
 import org.springframework.stereotype.Component;
@@ -17,7 +18,7 @@ public class RoomValidation {
     public static void validate(Room room){
 
         if(Objects.isNull(room) || Objects.isNull(room.getRoomType())){
-            throw new IllegalArgumentException("bad request");
+            throw new BadRequestException("Valor da sala inválido: " + null);
         }
 
         String roomType = room.getRoomType().getCode().toUpperCase();
@@ -30,7 +31,7 @@ public class RoomValidation {
                 validateVipRoom(room);
                 break;
             default:
-                throw new IllegalArgumentException("Tipo de sala inválido: " + roomType);
+                throw new BadRequestException("Valor da sala inválido: " + roomType);
         }
     }
 
