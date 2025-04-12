@@ -36,27 +36,45 @@ public class RoomValidation {
     }
 
     public static void validateNormalRoom(Room room){
-
-        normalRooms.add(room);
-
-        int roomNumber = normalRooms.size();
-
-        limitNormalRoomValidation(room, roomNumber);
+        limitNormalRoomValidation(room);
     }
 
-    public static void limitNormalRoomValidation(Room room, Integer roomNumber){
+    public static void limitNormalRoomValidation(Room room) {
 
-        if(roomNumber <= 5){
-            room.setNumberRooms(roomNumber);
-            room.setSeatCapacity(400);
-            room.setIsOccupied(true);
-            room.setRoomStatus(RoomStatus.valueOf("OCUPADO"));
-        }
-
-        if(roomNumber > 5){
+        if (normalRooms.size() > 2) {
             normalRooms.removeLast();
             throw new IllegalArgumentException("exceção personalizada");
         }
+
+        if (normalRooms.isEmpty()) {
+            room.setNumberRooms(1);
+            room.setSeatCapacity(400);
+            room.setIsOccupied(true);
+            room.setRoomStatus(RoomStatus.OCUPADO);
+            normalRooms.add(room);
+            return;
+        }
+
+        List<Integer> existingNumbers = normalRooms
+                .stream()
+                .map(Room::getNumberRooms)
+                .filter(Objects::nonNull)
+                .sorted()
+                .toList();
+
+        int roomNumber = 1;
+        for (Integer value : existingNumbers) {
+
+            if (Objects.equals(value, roomNumber)) {
+                roomNumber++;
+            }
+        }
+
+        room.setNumberRooms(roomNumber);
+        room.setSeatCapacity(400);
+        room.setIsOccupied(true);
+        room.setRoomStatus(RoomStatus.OCUPADO);
+        normalRooms.add(room);
     }
 
     public static void validateVipRoom(Room room){
