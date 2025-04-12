@@ -2,7 +2,19 @@ package com.devpaulojr.technologyconference.model;
 
 import com.devpaulojr.technologyconference.model.enums.RoomStatus;
 import com.devpaulojr.technologyconference.model.enums.RoomType;
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -30,7 +42,7 @@ public class Room implements Serializable {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "number_rooms", nullable = false)
+    @Column(name = "number_rooms", nullable = false, unique = true)
     private Integer numberRooms;
 
     @Column(name = "seat_capacity", nullable = false)
@@ -57,5 +69,6 @@ public class Room implements Serializable {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "company_id", referencedColumnName = "id", nullable = false)
+    @JsonIgnore
     private Company company;
 }
