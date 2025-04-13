@@ -80,27 +80,45 @@ public class RoomValidation {
     }
 
     public static void validateVipRoom(Room room){
-
-        vipRooms.add(room);
-
-        int roomNumber = vipRooms.size() + 5;
-
-        limitVipRoomValidation(room, roomNumber);
+        limitVipRoomValidation(room);
     }
 
-    public static void limitVipRoomValidation(Room room, Integer roomNumber){
+    public static void limitVipRoomValidation(Room room){
 
-        if(roomNumber <= 10){
-            room.setNumberRooms(roomNumber);
-            room.setSeatCapacity(800);
-            room.setIsOccupied(true);
-            room.setRoomStatus(RoomStatus.valueOf("OCUPADO"));
-        }
-
-        if(roomNumber > 10){
+        if(vipRooms.size() > 2){
             vipRooms.removeLast();
             throw new IllegalArgumentException("exceção personalizada");
         }
+
+        if(vipRooms.isEmpty()){
+            room.setNumberRooms(4);
+            room.setSeatCapacity(800);
+            room.setIsOccupied(true);
+            room.setRoomStatus(RoomStatus.OCUPADO);
+            vipRooms.add(room);
+            return;
+        }
+
+        List<Integer> existingNumber = vipRooms
+                .stream()
+                .map(Room::getNumberRooms)
+                .filter(Objects::nonNull)
+                .sorted()
+                .toList();
+
+        int roomNumber = 4;
+        for(Integer value : existingNumber){
+
+            if(value == roomNumber){
+                roomNumber++;
+            }
+        }
+
+        room.setNumberRooms(roomNumber);
+        room.setSeatCapacity(800);
+        room.setIsOccupied(true);
+        room.setRoomStatus(RoomStatus.OCUPADO);
+        vipRooms.add(room);
     }
 
     public static void validateDeleteById(UUID id, RoomType roomType){
