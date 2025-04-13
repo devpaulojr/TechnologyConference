@@ -1,6 +1,7 @@
 package com.devpaulojr.technologyconference.controllers;
 
 import com.devpaulojr.technologyconference.controllers.dtos.RoomDto;
+import com.devpaulojr.technologyconference.controllers.dtos.UserDto;
 import com.devpaulojr.technologyconference.controllers.mappers.RoomMapper;
 import com.devpaulojr.technologyconference.controllers.util.UriGenerator;
 import com.devpaulojr.technologyconference.model.Room;
@@ -36,6 +37,16 @@ public class RoomController implements UriGenerator {
         return ResponseEntity.ok().body(dtos);
     }
 
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<RoomDto> findById(@PathVariable UUID id){
+
+        var room = service.findById(id);
+
+        var dto = mapper.toDto(room);
+
+        return ResponseEntity.ok().body(dto);
+    }
+
     @PostMapping
     public ResponseEntity<Void> insert(@RequestBody @Valid RoomDto roomDto){
 
@@ -46,6 +57,16 @@ public class RoomController implements UriGenerator {
         URI uri = uriGenerator(room.getId());
 
         return ResponseEntity.created(uri).build();
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<Void> update(@PathVariable UUID id, @RequestBody RoomDto roomDto){
+
+        var user = mapper.toEntity(roomDto);
+
+        service.update(user, id);
+
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping(value = "/{id}")

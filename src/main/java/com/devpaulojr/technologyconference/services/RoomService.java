@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import static com.devpaulojr.technologyconference.services.validations.RoomValidation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -24,6 +25,11 @@ public class RoomService {
 
     public List<Room> findAll(){
         return roomRepository.findAll();
+    }
+
+    public Room findById(UUID id){
+        return roomRepository.findById(id)
+                .orElseThrow( () -> new ResourceNotFoundException("Não foi possível achar o id: " + id));
     }
 
     public Room insert(Room room) {
@@ -46,6 +52,22 @@ public class RoomService {
             room.setRoomStatus(RoomStatus.valueOf("RESERVADO"));
         }
         return roomRepository.save(room);
+    }
+
+    public void update(Room room, UUID id){
+
+        Optional<Room> roomFound = roomRepository.findById(id);
+
+        if(roomFound.isPresent()){
+            updated(roomFound, room);
+            roomRepository.save(roomFound.get());
+            return;
+        }
+        throw new ResourceNotFoundException("Não foi possível achar o id: " + id);
+    }
+
+    private void updated(Optional<Room> roomFound , Room room) {
+        roomFound.ifPresent(value -> Optional.ofNullable(room.getRoomStatus()).ifPresent(value::setRoomStatus));
     }
 
     public void deleteById(UUID id){
