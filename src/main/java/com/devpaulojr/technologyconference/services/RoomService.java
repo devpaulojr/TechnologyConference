@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import static com.devpaulojr.technologyconference.services.validations.RoomValidation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -47,4 +48,31 @@ public class RoomService {
         return roomRepository.save(room);
     }
 
+    public void deleteById(UUID id){
+
+        Room room = roomRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Room não encontrado"));
+
+        //Validação do ‘ID’, e o tipo da lista para remoção da classe 'Room'
+        validateDeleteById(id, room.getRoomType());
+
+        if (room.getCompany() != null) {
+            room.getCompany().setRoom(null);
+            room.setCompany(null);
+        }
+        roomRepository.delete(room);
+    }
+
+    public void deleteAll(){
+
+        List<Room> rooms = roomRepository.findAll();
+
+        for (Room room : rooms) {
+            room.getCompany().setRoom(null);
+            room.setCompany(null);
+        }
+        validateDeleteAll();
+
+        roomRepository.deleteAll(rooms);
+    }
 }

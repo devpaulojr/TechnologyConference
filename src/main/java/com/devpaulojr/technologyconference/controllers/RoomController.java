@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
@@ -45,5 +46,21 @@ public class RoomController implements UriGenerator {
         URI uri = uriGenerator(room.getId());
 
         return ResponseEntity.created(uri).build();
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable UUID id){
+
+        service.deleteById(id);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteAll(){
+
+        service.deleteAll();
+
+        return ResponseEntity.noContent().build();
     }
 }

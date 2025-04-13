@@ -3,11 +3,13 @@ package com.devpaulojr.technologyconference.services.validations;
 import com.devpaulojr.technologyconference.controllers.exceptions.BadRequestException;
 import com.devpaulojr.technologyconference.model.Room;
 import com.devpaulojr.technologyconference.model.enums.RoomStatus;
+import com.devpaulojr.technologyconference.model.enums.RoomType;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Component
 public class RoomValidation {
@@ -99,5 +101,39 @@ public class RoomValidation {
             vipRooms.removeLast();
             throw new IllegalArgumentException("exceção personalizada");
         }
+    }
+
+    public static void validateDeleteById(UUID id, RoomType roomType){
+
+        if(Objects.equals(roomType.getCode(), "NORMAL")){
+
+            for(int line = 0; line < normalRooms.size(); line++){
+
+                var idCurrent = normalRooms.get(line).getId();
+
+                if(Objects.equals(idCurrent, id)){
+                    normalRooms.remove(line);
+                    break;
+                }
+            }
+        }
+
+        if(Objects.equals(roomType.getCode(), "VIP")){
+
+            for(int line = 0; line < vipRooms.size(); line++){
+
+                var idCurrent = vipRooms.get(line).getId();
+
+                if(Objects.equals(idCurrent, id)){
+                    vipRooms.remove(line);
+                    break;
+                }
+            }
+        }
+    }
+
+    public static void validateDeleteAll(){
+        normalRooms.clear();
+        vipRooms.clear();
     }
 }
