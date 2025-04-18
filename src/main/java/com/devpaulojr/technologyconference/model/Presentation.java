@@ -1,5 +1,6 @@
 package com.devpaulojr.technologyconference.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,8 +30,13 @@ public class Presentation {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(nullable = false)
     private String name;
+
+    @Column(name = "start_time", nullable = false)
     private OffsetDateTime startTime;
+
+    @Column(name = "end_time", nullable = false)
     private OffsetDateTime endTime;
 
     @ManyToOne
