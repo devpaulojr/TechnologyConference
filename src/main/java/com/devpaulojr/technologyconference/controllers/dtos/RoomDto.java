@@ -8,18 +8,18 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record RoomDto(
-               UUID id,
-               Integer numberRooms,
-               Integer seatCapacity,
-               Boolean isOccupied,
+        UUID id,
+        Integer numberRooms,
+        Integer seatCapacity,
+        Boolean isOccupied,
 
-               @NotNull(message = "O campo roomType não pode ser vazio.")
+        @NotNull(message = "O campo roomType não pode ser vazio.")
                RoomType roomType,
 
-               RoomStatus roomStatus,
-               LocalDateTime createdAt,
-               LocalDateTime updatedAt,
+        RoomStatus roomStatus,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt,
 
-               @NotNull(message = "O campo company não pode ser vazio.")
+        @NotNull(message = "O campo company não pode ser vazio.")
                CompanyDto company) {
 }
