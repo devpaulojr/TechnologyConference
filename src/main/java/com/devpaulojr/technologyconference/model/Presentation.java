@@ -13,7 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Getter
@@ -30,10 +30,10 @@ public class Presentation {
     private UUID id;
 
     private String name;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private OffsetDateTime startTime;
+    private OffsetDateTime endTime;
 
     @ManyToOne
-    @JoinColumn(name = "id_room", referencedColumnName = "id",nullable = false)
+    @JoinColumn(name = "id_room", referencedColumnName = "id", nullable = false)
     private Room room;
 }
