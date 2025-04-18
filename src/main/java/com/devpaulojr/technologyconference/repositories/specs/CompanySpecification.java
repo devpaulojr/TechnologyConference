@@ -1,4 +1,4 @@
-package com.devpaulojr.technologyconference.services.specs;
+package com.devpaulojr.technologyconference.repositories.specs;
 
 import com.devpaulojr.technologyconference.model.Company;
 import org.springframework.data.jpa.domain.Specification;

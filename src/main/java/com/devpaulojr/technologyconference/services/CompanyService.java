@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.devpaulojr.technologyconference.services.specs.CompanySpecification.*;
+import static com.devpaulojr.technologyconference.repositories.specs.CompanySpecification.*;
 
 @RequiredArgsConstructor
 @Service
