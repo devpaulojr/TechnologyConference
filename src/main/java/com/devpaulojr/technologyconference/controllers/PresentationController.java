@@ -1,6 +1,8 @@
 package com.devpaulojr.technologyconference.controllers;
 
+import com.devpaulojr.technologyconference.controllers.dtos.PresentationCreatedDto;
 import com.devpaulojr.technologyconference.controllers.dtos.PresentationDto;
+import com.devpaulojr.technologyconference.controllers.mappers.PresentationCreatedMapper;
 import com.devpaulojr.technologyconference.controllers.mappers.PresentationMapper;
 import com.devpaulojr.technologyconference.controllers.util.UriGenerator;
 import com.devpaulojr.technologyconference.model.Presentation;
@@ -23,17 +25,31 @@ import java.util.List;
 public class PresentationController implements UriGenerator {
 
     private final PresentationService service;
-    private final PresentationMapper mapper;
+    private final PresentationMapper presentationMapper;
+    private final PresentationCreatedMapper presentationCreatedMapper;
 
 
-    @GetMapping
-    public ResponseEntity<List<PresentationDto>> findAll(){
+    @GetMapping(value = "/all")
+    public ResponseEntity<List<PresentationDto>> findAllDetails(){
 
         List<Presentation> presentations = service.findAll();
 
         List<PresentationDto> dtos = presentations
                 .stream()
-                .map(mapper::toDto)
+                .map(presentationMapper::toDto)
+                .toList();
+
+        return ResponseEntity.ok().body(dtos);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<PresentationCreatedDto>> findAll(){
+
+        List<Presentation> presentations = service.findAll();
+
+        List<PresentationCreatedDto> dtos = presentations
+                .stream()
+                .map(presentationCreatedMapper::toDto)
                 .toList();
 
         return ResponseEntity.ok().body(dtos);
@@ -42,7 +58,7 @@ public class PresentationController implements UriGenerator {
     @PostMapping
     public ResponseEntity<Void> insert(@RequestBody @Valid PresentationDto presentationDto){
 
-        var presentation = mapper.toEntity(presentationDto);
+        var presentation = presentationMapper.toEntity(presentationDto);
 
         presentation = service.insert(presentation);
 

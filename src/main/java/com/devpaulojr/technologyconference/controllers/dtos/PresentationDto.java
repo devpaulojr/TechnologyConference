@@ -1,6 +1,7 @@
 package com.devpaulojr.technologyconference.controllers.dtos;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 
 import java.time.OffsetDateTime;
@@ -17,6 +18,7 @@ public record PresentationDto(
 
         OffsetDateTime endTime,
 
+        @NotNull(message = "O campo room não pode ser vazio.")
         RoomDto room
 ) {
 }
