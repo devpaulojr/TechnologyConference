@@ -3,6 +3,7 @@ package com.devpaulojr.technologyconference.services;
 import com.devpaulojr.technologyconference.controllers.exceptions.BadRequestException;
 import com.devpaulojr.technologyconference.model.Presentation;
 import com.devpaulojr.technologyconference.repositories.PresentationRepository;
+import com.devpaulojr.technologyconference.repositories.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,20 +16,29 @@ import static com.devpaulojr.technologyconference.services.validations.Presentat
 @Service
 public class PresentationService {
 
-    private final PresentationRepository repository;
+    private final PresentationRepository presentationRepository;
+    private final RoomRepository roomRepository;
 
 
     public List<Presentation> findAll(){
-        return repository.findAll();
+        return presentationRepository.findAll();
     }
 
     public Presentation insert(Presentation presentation){
 
-        List<Presentation> presentationList = repository.findAll();
-        List<String> presentationName = repository.findAll().stream().map(Presentation::getName).toList();
+        var room = roomRepository.findById(presentation.getRoom().getId())
+                .orElseThrow( () -> new BadRequestException("Sala não encontrada para cadastrar a conferência.") );
+
+        var users = room.getCompany().getUsers();
+
+        if(users.isEmpty()){
+            throw new BadRequestException("Nenhum usuário encontrado para cadastrar a conferência.");
+        }
+
+        List<Presentation> presentationList = presentationRepository.findAll();
+        List<String> presentationName = presentationRepository.findAll().stream().map(Presentation::getName).toList();
 
         for(String value : presentationName){
-
             if(Objects.equals(value, presentation.getName())){
                 throw new BadRequestException("Valor do nome invalido, tente outro nome. " + presentation.getName());
             }
@@ -37,6 +47,6 @@ public class PresentationService {
         // validação da classe presentation
         presentationValidation(presentation, presentationList);
 
-        return repository.save(presentation);
+        return presentationRepository.save(presentation);
     }
 }
