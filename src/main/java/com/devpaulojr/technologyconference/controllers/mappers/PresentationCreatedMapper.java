@@ -10,4 +10,7 @@ public interface PresentationCreatedMapper {
 
     @Mapping(source = "id", target = "id")
     PresentationCreatedDto toDto(Presentation presentation);
+
+    @Mapping(source = "id", target = "id")
+    Presentation toEntity(PresentationCreatedDto presentationCreatedDto);
 }

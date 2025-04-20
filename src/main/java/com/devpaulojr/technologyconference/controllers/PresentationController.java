@@ -10,14 +10,11 @@ import com.devpaulojr.technologyconference.services.PresentationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
@@ -42,6 +39,16 @@ public class PresentationController implements UriGenerator {
         return ResponseEntity.ok().body(dtos);
     }
 
+    @GetMapping(value = "/all/{id}")
+    public ResponseEntity<PresentationDto> findByIdDetails(@PathVariable UUID id){
+
+        var presentation = service.findById(id);
+
+        var dto = presentationMapper.toDto(presentation);
+
+        return ResponseEntity.ok().body(dto);
+    }
+
     @GetMapping
     public ResponseEntity<List<PresentationCreatedDto>> findAll(){
 
@@ -55,6 +62,16 @@ public class PresentationController implements UriGenerator {
         return ResponseEntity.ok().body(dtos);
     }
 
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<PresentationCreatedDto> findById(@PathVariable UUID id){
+
+        var presentation = service.findById(id);
+
+        var dto = presentationCreatedMapper.toDto(presentation);
+
+        return ResponseEntity.ok().body(dto);
+    }
+
     @PostMapping
     public ResponseEntity<Void> insert(@RequestBody @Valid PresentationDto presentationDto){
 
@@ -65,5 +82,23 @@ public class PresentationController implements UriGenerator {
         URI uri = uriGenerator(presentation.getId());
 
         return ResponseEntity.created(uri).build();
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<Void> update(@PathVariable UUID id, @RequestBody PresentationCreatedDto presentationCreatedDto){
+
+        var presentation = presentationCreatedMapper.toEntity(presentationCreatedDto);
+
+        service.update(presentation, id);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable UUID id){
+
+        service.deleteById(id);
+
+        return ResponseEntity.noContent().build();
     }
 }
