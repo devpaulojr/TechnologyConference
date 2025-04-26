@@ -3,11 +3,10 @@ package com.devpaulojr.technologyconference.services;
 import com.devpaulojr.technologyconference.controllers.exceptions.BadRequestException;
 import com.devpaulojr.technologyconference.controllers.exceptions.ResourceNotFoundException;
 import com.devpaulojr.technologyconference.model.Presentation;
-import com.devpaulojr.technologyconference.model.User;
 import com.devpaulojr.technologyconference.repositories.PresentationRepository;
 import com.devpaulojr.technologyconference.repositories.RoomRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +15,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.devpaulojr.technologyconference.services.validations.PresentationValidation.*;
+import static com.devpaulojr.technologyconference.repositories.specs.PresentationSpecification.*;
 
 @RequiredArgsConstructor
 @Service
@@ -82,5 +82,24 @@ public class PresentationService {
                 .orElseThrow(() -> new ResourceNotFoundException("Não foi possível achar o id: " + id)));
 
         presentationRepository.deleteById(id);
+    }
+
+    public List<Presentation> specification(String name, Integer startTime){
+
+        Specification<Presentation> specs = Specification.where( ((root, query, cb)
+                -> cb.conjunction()) );
+
+        if(name != null){
+            specs = specs.and(likeName(name));
+        }
+
+        if(startTime != null){
+
+            Integer convertTime = startTime - 3;
+
+            specs = specs.and(equalStartTimeHour(convertTime));
+        }
+
+        return presentationRepository.findAll(specs);
     }
 }

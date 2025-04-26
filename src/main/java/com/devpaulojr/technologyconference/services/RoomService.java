@@ -4,12 +4,15 @@ import com.devpaulojr.technologyconference.controllers.exceptions.BadRequestExce
 import com.devpaulojr.technologyconference.controllers.exceptions.ResourceNotFoundException;
 import com.devpaulojr.technologyconference.model.Room;
 import com.devpaulojr.technologyconference.model.enums.RoomStatus;
+import com.devpaulojr.technologyconference.model.enums.RoomType;
 import com.devpaulojr.technologyconference.repositories.CompanyRepository;
 import com.devpaulojr.technologyconference.repositories.RoomRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import static com.devpaulojr.technologyconference.services.validations.RoomValidation.*;
+import static com.devpaulojr.technologyconference.repositories.specs.RoomSpecification.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -96,5 +99,21 @@ public class RoomService {
         validateDeleteAll();
 
         roomRepository.deleteAll(rooms);
+    }
+
+    public List<Room> specification(Integer numberRooms, RoomStatus roomStatus, RoomType roomType){
+
+        Specification<Room> specs = Specification.where( ((root, query, cb) -> cb.conjunction()));
+
+        if(numberRooms != null){
+            specs = specs.and(equalNumberRooms(numberRooms));
+        }
+        if(roomStatus != null){
+            specs = specs.and(likeRoomStatus(roomStatus));
+        }
+        if(roomType != null){
+            specs = specs.and(likeRoomType(roomType));
+        }
+        return roomRepository.findAll(specs);
     }
 }

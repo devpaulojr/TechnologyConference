@@ -5,6 +5,8 @@ import com.devpaulojr.technologyconference.controllers.dtos.UserDto;
 import com.devpaulojr.technologyconference.controllers.mappers.RoomMapper;
 import com.devpaulojr.technologyconference.controllers.util.UriGenerator;
 import com.devpaulojr.technologyconference.model.Room;
+import com.devpaulojr.technologyconference.model.enums.RoomStatus;
+import com.devpaulojr.technologyconference.model.enums.RoomType;
 import com.devpaulojr.technologyconference.services.RoomService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +47,21 @@ public class RoomController implements UriGenerator {
         var dto = mapper.toDto(room);
 
         return ResponseEntity.ok().body(dto);
+    }
+
+    @GetMapping(value = "/filter")
+    public ResponseEntity<List<RoomDto>> specs(@RequestParam(required = false, value = "numberRooms")
+                                               Integer numberRooms,
+                                               @RequestParam(required = false, value = "roomStatus")
+                                               RoomStatus roomStatus,
+                                               @RequestParam(required = false, value = "roomType")
+                                               RoomType roomType) {
+
+        List<Room> rooms = service.specification(numberRooms, roomStatus, roomType);
+
+        List<RoomDto> dtos = rooms.stream().map(mapper::toDto).toList();
+
+        return ResponseEntity.ok(dtos);
     }
 
     @PostMapping

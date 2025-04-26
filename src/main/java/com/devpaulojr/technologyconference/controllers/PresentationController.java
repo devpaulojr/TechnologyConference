@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -70,6 +71,22 @@ public class PresentationController implements UriGenerator {
         var dto = presentationCreatedMapper.toDto(presentation);
 
         return ResponseEntity.ok().body(dto);
+    }
+
+    @GetMapping(value = "/filter")
+    public ResponseEntity<List<PresentationCreatedDto>> specs(@RequestParam(required = false, value = "name")
+                                                              String name,
+                                                              @RequestParam(required = false, value = "startTime")
+                                                              Integer startTime) {
+
+        List<Presentation> presentations = service.specification(name, startTime);
+
+        List<PresentationCreatedDto> dtos = presentations
+                .stream()
+                .map(presentationCreatedMapper::toDto)
+                .toList();
+
+        return ResponseEntity.ok(dtos);
     }
 
     @PostMapping
