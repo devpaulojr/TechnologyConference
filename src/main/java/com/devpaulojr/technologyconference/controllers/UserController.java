@@ -1,8 +1,10 @@
 package com.devpaulojr.technologyconference.controllers;
 
-import com.devpaulojr.technologyconference.controllers.dtos.UserCreatedDto;
+import com.devpaulojr.technologyconference.controllers.dtos.response.UserDetailsDto;
+import com.devpaulojr.technologyconference.controllers.dtos.response.UserResponseDto;
 import com.devpaulojr.technologyconference.controllers.dtos.UserDto;
-import com.devpaulojr.technologyconference.controllers.mappers.UserCreatedMapper;
+import com.devpaulojr.technologyconference.controllers.mappers.response.UserDetailsMapper;
+import com.devpaulojr.technologyconference.controllers.mappers.response.UserResponseMapper;
 import com.devpaulojr.technologyconference.controllers.mappers.UserMapper;
 import com.devpaulojr.technologyconference.controllers.util.UriGenerator;
 import com.devpaulojr.technologyconference.model.User;
@@ -31,31 +33,50 @@ public class UserController implements UriGenerator {
 
     private final UserService service;
     private final UserMapper userMapper;
-    private final UserCreatedMapper userCreatedMapper;
+    private final UserResponseMapper userResponseMapper;
+    private final UserDetailsMapper userDetailsMapper;
 
+
+    @GetMapping(value = "/all")
+    public ResponseEntity<List<UserDetailsDto>> findAllDetails(){
+
+        List<User> users = service.findAll();
+        List<UserDetailsDto> dtos = users.stream().map(userDetailsMapper::toDto).toList();
+
+        return ResponseEntity.ok().body(dtos);
+    }
+
+    @GetMapping(value = "/all/{id}")
+    public ResponseEntity<UserDetailsDto> findByIdDetails(@PathVariable UUID id){
+
+        var user = service.findById(id);
+        var dtos = userDetailsMapper.toDto(user);
+
+        return ResponseEntity.ok().body(dtos);
+    }
 
     @GetMapping
-    public ResponseEntity<List<UserCreatedDto>> findAll(){
+    public ResponseEntity<List<UserResponseDto>> findAll(){
 
         List<User> userList = service.findAll();
 
-        List<UserCreatedDto> userCreateDtos = userList.stream().map(userCreatedMapper::toDto).toList();
+        List<UserResponseDto> userCreateDtos = userList.stream().map(userResponseMapper::toDto).toList();
 
         return ResponseEntity.ok().body(userCreateDtos);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<UserCreatedDto> findById(@PathVariable UUID id){
+    public ResponseEntity<UserResponseDto> findById(@PathVariable UUID id){
 
         var user = service.findById(id);
 
-        UserCreatedDto dto = userCreatedMapper.toDto(user);
+        UserResponseDto dto = userResponseMapper.toDto(user);
 
         return ResponseEntity.ok().body(dto);
     }
 
     @GetMapping(value = "/filter")
-    public ResponseEntity<List<UserCreatedDto>> specs(
+    public ResponseEntity<List<UserResponseDto>> specs(
             @RequestParam(required = false, value = "firstName") String firstName,
             @RequestParam(required = false, value = "lastName") String lastName,
             @RequestParam(required = false, value = "email") String email,
@@ -64,7 +85,7 @@ public class UserController implements UriGenerator {
 
         var specification = service.specification(firstName, lastName, email, phoneNumber, vip);
 
-        var dto = specification.stream().map(userCreatedMapper::toDto).toList();
+        var dto = specification.stream().map(userResponseMapper::toDto).toList();
 
         return ResponseEntity.ok(dto);
     }

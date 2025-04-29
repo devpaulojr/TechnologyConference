@@ -1,8 +1,9 @@
 package com.devpaulojr.technologyconference.controllers;
 
 import com.devpaulojr.technologyconference.controllers.dtos.RoomDto;
-import com.devpaulojr.technologyconference.controllers.dtos.UserDto;
+import com.devpaulojr.technologyconference.controllers.dtos.response.RoomResponseDto;
 import com.devpaulojr.technologyconference.controllers.mappers.RoomMapper;
+import com.devpaulojr.technologyconference.controllers.mappers.response.RoomResponseMapper;
 import com.devpaulojr.technologyconference.controllers.util.UriGenerator;
 import com.devpaulojr.technologyconference.model.Room;
 import com.devpaulojr.technologyconference.model.enums.RoomStatus;
@@ -23,34 +24,55 @@ import java.util.UUID;
 public class RoomController implements UriGenerator {
 
     private final RoomService service;
-    private final RoomMapper mapper;
+    private final RoomMapper roomMapper;
+    private final RoomResponseMapper roomResponseMapper;
 
 
-    @GetMapping
-    public ResponseEntity<List<RoomDto>> findAll(){
+    @GetMapping(value = "/all")
+    public ResponseEntity<List<RoomDto>> findAllDetails(){
 
         List<Room> rooms = service.findAll();
 
-        List<RoomDto> dtos = rooms
+        List<RoomDto> dtos = rooms.stream().map(roomMapper::toDto).toList();
+
+        return ResponseEntity.ok().body(dtos);
+    }
+
+    @GetMapping(value = "/all/{id}")
+    public ResponseEntity<RoomDto> findByIdDetails(@PathVariable UUID id){
+
+        var room = service.findById(id);
+
+        var dto = roomMapper.toDto(room);
+
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<RoomResponseDto>> findAll(){
+
+        List<Room> rooms = service.findAll();
+
+        List<RoomResponseDto> dtos = rooms
                 .stream()
-                .map(mapper::toDto)
+                .map(roomResponseMapper::toDto)
                 .toList();
 
         return ResponseEntity.ok().body(dtos);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<RoomDto> findById(@PathVariable UUID id){
+    public ResponseEntity<RoomResponseDto> findById(@PathVariable UUID id){
 
         var room = service.findById(id);
 
-        var dto = mapper.toDto(room);
+        var dto = roomResponseMapper.toDto(room);
 
         return ResponseEntity.ok().body(dto);
     }
 
     @GetMapping(value = "/filter")
-    public ResponseEntity<List<RoomDto>> specs(@RequestParam(required = false, value = "numberRooms")
+    public ResponseEntity<List<RoomResponseDto>> specs(@RequestParam(required = false, value = "numberRooms")
                                                Integer numberRooms,
                                                @RequestParam(required = false, value = "roomStatus")
                                                RoomStatus roomStatus,
@@ -59,7 +81,10 @@ public class RoomController implements UriGenerator {
 
         List<Room> rooms = service.specification(numberRooms, roomStatus, roomType);
 
-        List<RoomDto> dtos = rooms.stream().map(mapper::toDto).toList();
+        List<RoomResponseDto> dtos = rooms
+                .stream()
+                .map(roomResponseMapper::toDto)
+                .toList();
 
         return ResponseEntity.ok(dtos);
     }
@@ -67,7 +92,7 @@ public class RoomController implements UriGenerator {
     @PostMapping
     public ResponseEntity<Void> insert(@RequestBody @Valid RoomDto roomDto){
 
-        Room room = mapper.toEntity(roomDto);
+        Room room = roomMapper.toEntity(roomDto);
 
         room = service.insert(room);
 
@@ -79,7 +104,7 @@ public class RoomController implements UriGenerator {
     @PutMapping(value = "/{id}")
     public ResponseEntity<Void> update(@PathVariable UUID id, @RequestBody RoomDto roomDto){
 
-        var user = mapper.toEntity(roomDto);
+        var user = roomMapper.toEntity(roomDto);
 
         service.update(user, id);
 

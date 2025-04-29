@@ -1,6 +1,8 @@
 package com.devpaulojr.technologyconference.controllers.dtos;
 
 import com.devpaulojr.technologyconference.model.Company;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
@@ -49,6 +51,6 @@ public record UserDto(
         @FutureOrPresent(message = "data não pode ser inferior ao dia de hoje.")
         LocalDateTime updatedAt,
 
-        CompanyDto company
-) {
+        @NotNull(message = "o campo users não pode ser vazio.")
+        CompanyDto company) {
 }

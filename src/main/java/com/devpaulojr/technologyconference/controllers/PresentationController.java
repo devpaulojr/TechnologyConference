@@ -1,8 +1,8 @@
 package com.devpaulojr.technologyconference.controllers;
 
-import com.devpaulojr.technologyconference.controllers.dtos.PresentationCreatedDto;
+import com.devpaulojr.technologyconference.controllers.dtos.response.PresentationResponseDto;
 import com.devpaulojr.technologyconference.controllers.dtos.PresentationDto;
-import com.devpaulojr.technologyconference.controllers.mappers.PresentationCreatedMapper;
+import com.devpaulojr.technologyconference.controllers.mappers.response.PresentationResponseMapper;
 import com.devpaulojr.technologyconference.controllers.mappers.PresentationMapper;
 import com.devpaulojr.technologyconference.controllers.util.UriGenerator;
 import com.devpaulojr.technologyconference.model.Presentation;
@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,7 +23,7 @@ public class PresentationController implements UriGenerator {
 
     private final PresentationService service;
     private final PresentationMapper presentationMapper;
-    private final PresentationCreatedMapper presentationCreatedMapper;
+    private final PresentationResponseMapper presentationCreatedMapper;
 
 
     @GetMapping(value = "/all")
@@ -51,11 +50,11 @@ public class PresentationController implements UriGenerator {
     }
 
     @GetMapping
-    public ResponseEntity<List<PresentationCreatedDto>> findAll(){
+    public ResponseEntity<List<PresentationResponseDto>> findAll(){
 
         List<Presentation> presentations = service.findAll();
 
-        List<PresentationCreatedDto> dtos = presentations
+        List<PresentationResponseDto> dtos = presentations
                 .stream()
                 .map(presentationCreatedMapper::toDto)
                 .toList();
@@ -64,7 +63,7 @@ public class PresentationController implements UriGenerator {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<PresentationCreatedDto> findById(@PathVariable UUID id){
+    public ResponseEntity<PresentationResponseDto> findById(@PathVariable UUID id){
 
         var presentation = service.findById(id);
 
@@ -74,14 +73,14 @@ public class PresentationController implements UriGenerator {
     }
 
     @GetMapping(value = "/filter")
-    public ResponseEntity<List<PresentationCreatedDto>> specs(@RequestParam(required = false, value = "name")
+    public ResponseEntity<List<PresentationResponseDto>> specs(@RequestParam(required = false, value = "name")
                                                               String name,
-                                                              @RequestParam(required = false, value = "startTime")
+                                                               @RequestParam(required = false, value = "startTime")
                                                               Integer startTime) {
 
         List<Presentation> presentations = service.specification(name, startTime);
 
-        List<PresentationCreatedDto> dtos = presentations
+        List<PresentationResponseDto> dtos = presentations
                 .stream()
                 .map(presentationCreatedMapper::toDto)
                 .toList();
@@ -102,9 +101,9 @@ public class PresentationController implements UriGenerator {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Void> update(@PathVariable UUID id, @RequestBody PresentationCreatedDto presentationCreatedDto){
+    public ResponseEntity<Void> update(@PathVariable UUID id, @RequestBody PresentationResponseDto presentationResponseDto){
 
-        var presentation = presentationCreatedMapper.toEntity(presentationCreatedDto);
+        var presentation = presentationCreatedMapper.toEntity(presentationResponseDto);
 
         service.update(presentation, id);
 

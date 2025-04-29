@@ -1,9 +1,9 @@
 package com.devpaulojr.technologyconference.controllers.dtos;
 
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.PastOrPresent;
-import jakarta.validation.constraints.Size;
+import com.devpaulojr.technologyconference.controllers.dtos.response.UserResponseDto;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.br.CNPJ;
 
 import java.time.LocalDateTime;
@@ -43,5 +43,5 @@ public record CompanyDto(
         @FutureOrPresent(message = "data não pode ser inferior ao dia de hoje.")
         LocalDateTime updatedAt,
 
-        List<UserCreatedDto> users) {
+        List<UserResponseDto> users) {
 }
