@@ -3,7 +3,19 @@ package com.devpaulojr.technologyconference.model;
 import com.devpaulojr.technologyconference.model.enums.RoomStatus;
 import com.devpaulojr.technologyconference.model.enums.RoomType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -30,6 +42,7 @@ import java.util.UUID;
 public class Room implements Serializable {
 
     @Id
+    @Column(name = "id_room")
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
@@ -59,7 +72,7 @@ public class Room implements Serializable {
     private LocalDateTime updatedAt;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "company_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "company_id", referencedColumnName = "id_company", nullable = false)
     private Company company;
 
     @JsonIgnore

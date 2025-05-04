@@ -36,6 +36,7 @@ import java.util.UUID;
 public class Company implements Serializable {
 
     @Id
+    @Column(name = "id_company")
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 

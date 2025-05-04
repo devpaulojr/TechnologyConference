@@ -27,6 +27,7 @@ import java.util.UUID;
 public class Presentation {
 
     @Id
+    @Column(name = "id_presentation")
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
@@ -40,6 +41,6 @@ public class Presentation {
     private OffsetDateTime endTime;
 
     @ManyToOne
-    @JoinColumn(name = "id_room", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "id_room", referencedColumnName = "id_room", nullable = false)
     private Room room;
 }

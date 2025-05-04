@@ -12,6 +12,7 @@ spring:
       ddl-auto: create-drop
       format_sql: true
   flyway:
+    baselineOnMigrate: true
     enabled: true
   locations:
     classpath: db/migration

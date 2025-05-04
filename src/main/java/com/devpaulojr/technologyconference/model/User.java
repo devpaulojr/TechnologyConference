@@ -66,7 +66,7 @@ public class User implements Serializable {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    @JoinColumn(name = "id_company")
     @ManyToOne
+    @JoinColumn(name = "id_company", referencedColumnName = "id_company")
     private Company company;
 }
