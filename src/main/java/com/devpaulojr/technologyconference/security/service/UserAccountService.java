@@ -3,17 +3,17 @@ package com.devpaulojr.technologyconference.security.service;
 import com.devpaulojr.technologyconference.security.UserAccount;
 import com.devpaulojr.technologyconference.security.repository.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class UserAccountService {
 
     private final UserAccountRepository repository;
-    private final PasswordEncoder encoder;
+    private final BCryptPasswordEncoder encoder;
 
 
     public List<UserAccount> findAll(){
@@ -28,8 +28,8 @@ public class UserAccountService {
 
         var password = userAccount.getPassword();
 
+        userAccount.setLogin(userAccount.getLogin().toUpperCase());
         userAccount.setPassword(encoder.encode(password));
-
         userAccount.setRoles(userAccount.getRoles().stream().map(String::toUpperCase).toList());
 
         return repository.save(userAccount);

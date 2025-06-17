@@ -14,3 +14,4 @@ public interface UserAccountMapper {
     @Mapping(source = "id", target = "id")
     UserAccount toEntity(UserAccountDto userAccountDto);
 }
+

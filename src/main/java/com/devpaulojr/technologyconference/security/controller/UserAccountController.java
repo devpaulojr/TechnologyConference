@@ -29,7 +29,6 @@ public class UserAccountController implements UriGenerator {
     public ResponseEntity<List<UserAccountDto>> findAll(){
 
         List<UserAccount> userAccounts = service.findAll();
-
         List<UserAccountDto> dtos = userAccounts.stream().map(mapper::toDto).toList();
 
         return ResponseEntity.ok().body(dtos);
