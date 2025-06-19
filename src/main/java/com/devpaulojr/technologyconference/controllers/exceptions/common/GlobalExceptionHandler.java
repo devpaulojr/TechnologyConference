@@ -9,6 +9,7 @@ import com.devpaulojr.technologyconference.controllers.util.CustomErrorMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -118,6 +119,28 @@ public class GlobalExceptionHandler implements CustomErrorMessage {
                 status.value(),
                 path.getRequestURI(),
                 "Erro de integridade de dados no campo: " + fieldError,
+                Collections.singletonList(detailsFieldError)
+        );
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(AccessDeniedException.class)
+    public StandardError accessDeniedException(AccessDeniedException exception,
+                                           HttpServletRequest path){
+
+        String defaultMessage = "Erro: Acesso sem permissão!!";
+        Instant timestamp = Instant.now();
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
+
+        String detailedMessage = (exception != null) ? exception.toString() : defaultMessage;
+
+        String detailsFieldError = errorMessageDetailsConflict(detailedMessage);
+
+        return new StandardError(
+                timestamp,
+                status.value(),
+                path.getRequestURI(),
+                defaultMessage,
                 Collections.singletonList(detailsFieldError)
         );
     }
