@@ -12,7 +12,16 @@ import com.devpaulojr.technologyconference.services.RoomService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.util.List;
@@ -28,6 +37,7 @@ public class RoomController implements UriGenerator {
     private final RoomResponseMapper roomResponseMapper;
 
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'CEO', 'GERENTE')")
     @GetMapping(value = "/all")
     public ResponseEntity<List<RoomDto>> findAllDetails(){
 
@@ -38,6 +48,7 @@ public class RoomController implements UriGenerator {
         return ResponseEntity.ok().body(dtos);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'CEO', 'GERENTE')")
     @GetMapping(value = "/all/{id}")
     public ResponseEntity<RoomDto> findByIdDetails(@PathVariable UUID id){
 
@@ -48,6 +59,7 @@ public class RoomController implements UriGenerator {
         return ResponseEntity.ok().body(dto);
     }
 
+    @PreAuthorize("hasAnyRole('PARTICIPANT', 'ADMIN', 'CEO', 'GERENTE', 'EMPLOYEE')")
     @GetMapping
     public ResponseEntity<List<RoomResponseDto>> findAll(){
 
@@ -61,6 +73,7 @@ public class RoomController implements UriGenerator {
         return ResponseEntity.ok().body(dtos);
     }
 
+    @PreAuthorize("hasAnyRole('PARTICIPANT', 'ADMIN', 'CEO', 'GERENTE', 'EMPLOYEE')")
     @GetMapping(value = "/{id}")
     public ResponseEntity<RoomResponseDto> findById(@PathVariable UUID id){
 
@@ -71,6 +84,7 @@ public class RoomController implements UriGenerator {
         return ResponseEntity.ok().body(dto);
     }
 
+    @PreAuthorize("hasAnyRole('PARTICIPANT', 'ADMIN', 'CEO', 'GERENTE', 'EMPLOYEE')")
     @GetMapping(value = "/filter")
     public ResponseEntity<List<RoomResponseDto>> specs(@RequestParam(required = false, value = "numberRooms")
                                                Integer numberRooms,
@@ -89,6 +103,7 @@ public class RoomController implements UriGenerator {
         return ResponseEntity.ok(dtos);
     }
 
+    @PreAuthorize("hasAnyRole('PARTICIPANT', 'ADMIN', 'CEO', 'GERENTE', 'EMPLOYEE')")
     @PostMapping
     public ResponseEntity<Void> insert(@RequestBody @Valid RoomDto roomDto){
 
@@ -101,6 +116,7 @@ public class RoomController implements UriGenerator {
         return ResponseEntity.created(uri).build();
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'CEO', 'GERENTE', 'EMPLOYEE')")
     @PutMapping(value = "/{id}")
     public ResponseEntity<Void> update(@PathVariable UUID id, @RequestBody RoomDto roomDto){
 
@@ -111,6 +127,7 @@ public class RoomController implements UriGenerator {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'CEO', 'GERENTE', 'EMPLOYEE')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable UUID id){
 
@@ -119,6 +136,7 @@ public class RoomController implements UriGenerator {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'CEO', 'GERENTE', 'EMPLOYEE')")
     @DeleteMapping
     public ResponseEntity<Void> deleteAll(){
 

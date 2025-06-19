@@ -12,6 +12,7 @@ import com.devpaulojr.technologyconference.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +38,7 @@ public class UserController implements UriGenerator {
     private final UserDetailsMapper userDetailsMapper;
 
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'CEO', 'GERENTE')")
     @GetMapping(value = "/all")
     public ResponseEntity<List<UserDetailsDto>> findAllDetails(){
 
@@ -46,6 +48,7 @@ public class UserController implements UriGenerator {
         return ResponseEntity.ok().body(dtos);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'CEO', 'GERENTE')")
     @GetMapping(value = "/all/{id}")
     public ResponseEntity<UserDetailsDto> findByIdDetails(@PathVariable UUID id){
 
@@ -55,6 +58,7 @@ public class UserController implements UriGenerator {
         return ResponseEntity.ok().body(dtos);
     }
 
+    @PreAuthorize("hasAnyRole('PARTICIPANT', 'ADMIN', 'CEO', 'GERENTE', 'EMPLOYEE')")
     @GetMapping
     public ResponseEntity<List<UserResponseDto>> findAll(){
 
@@ -65,6 +69,7 @@ public class UserController implements UriGenerator {
         return ResponseEntity.ok().body(userCreateDtos);
     }
 
+    @PreAuthorize("hasAnyRole('PARTICIPANT', 'ADMIN', 'CEO', 'GERENTE', 'EMPLOYEE')")
     @GetMapping(value = "/{id}")
     public ResponseEntity<UserResponseDto> findById(@PathVariable UUID id){
 
@@ -75,6 +80,7 @@ public class UserController implements UriGenerator {
         return ResponseEntity.ok().body(dto);
     }
 
+    @PreAuthorize("hasAnyRole('PARTICIPANT', 'ADMIN', 'CEO', 'GERENTE', 'EMPLOYEE')")
     @GetMapping(value = "/filter")
     public ResponseEntity<List<UserResponseDto>> specs(
             @RequestParam(required = false, value = "firstName") String firstName,
@@ -90,6 +96,7 @@ public class UserController implements UriGenerator {
         return ResponseEntity.ok(dto);
     }
 
+    @PreAuthorize("hasAnyRole('PARTICIPANT', 'ADMIN', 'CEO', 'GERENTE', 'EMPLOYEE')")
     @PostMapping
     public ResponseEntity<Void> insert(@RequestBody @Valid UserDto userDto) {
 
@@ -102,6 +109,7 @@ public class UserController implements UriGenerator {
         return ResponseEntity.created(uri).build();
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'CEO', 'GERENTE', 'EMPLOYEE')")
     @PutMapping(value = "/{id}")
     public ResponseEntity<Void> update(@PathVariable UUID id, @RequestBody UserDto userDto){
 
@@ -112,6 +120,7 @@ public class UserController implements UriGenerator {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'CEO', 'GERENTE', 'EMPLOYEE')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable UUID id){
 

@@ -8,6 +8,7 @@ import com.devpaulojr.technologyconference.security.service.UserAccountService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,6 +26,7 @@ public class UserAccountController implements UriGenerator {
     private final UserAccountService service;
     private final UserAccountMapper mapper;
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'CEO', 'GERENTE')")
     @GetMapping
     public ResponseEntity<List<UserAccountDto>> findAll(){
 
