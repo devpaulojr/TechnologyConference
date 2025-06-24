@@ -1,6 +1,6 @@
 <h1 align="center" style="font-weight: bold;">TechnologyConference 💻</h1>
 
-<div style="text-align: center">
+<div align="center">
   <img src="https://img.shields.io/badge/Java-%23ED8B00.svg?logo=openjdk&logoColor=white" alt="Java" />
   <img src="https://img.shields.io/badge/HTML-%23E34F26.svg?logo=html5&logoColor=white" alt="HTML" />
   <img src="https://img.shields.io/badge/Bootstrap-7952B3?logo=bootstrap&logoColor=fff" alt="Bootstrap" />
@@ -9,32 +9,35 @@
   <img src="https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=fff" alt="Docker" />
 </div>
 
-<h2 id="started">🚀 Vamos começar</h2>
+---
 
-Vamos começar com a lista de
-pré-requisito
+## 🚀 Vamos começar
 
-<h3>Requisito</h3>
+### 🔧 Pré-requisitos
 
-- [SDK 21](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html)
-- [docker desktop](https://www.docker.com/get-started/)
+- [Java SDK 21](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html)
+- [Docker Desktop](https://www.docker.com/get-started/)
 
-<h2> Particularidades do sistema </h2>
+---
 
-- O sistema possui validação diretamente em lista, então... por algum motivo, o código para de ser executado. Deve reiniciar sua aplicação e executar novamente. Sistema de validação totalmente em memória (motivos de estudos).
-- Na classe "Room", não pode existir sala com o mesmo número!! A sala normal tem numeração de 1 à 3, a sala vip tem numeração 4 à 5.
+## ⚙️ Particularidades do sistema
+
+- O sistema possui validação diretamente em lista, então... por algum motivo, o código para de ser executado. Deve reiniciar sua aplicação e executar novamente.
+- Sistema de validação totalmente em memória (motivos de estudos).Na classe "Room", não pode existir sala com o mesmo número!! A sala normal tem numeração de 1 à 3, a sala vip tem numeração 4 à 5.
 - Na classe "Presentation", não pode existir apresentação no mesmo horário. Cada apresentação tem um intervalo de duas horas.
 
-<h2>Tabela de conteúdos</h2>
+## 📚 Tabela de Conteúdos
 
-- [XXXX]()
-- [XXXX]()
-- [XXXX]()
-- [XXXX]()
+- [Application.yml](#applicationyml)
+- [docker-compose.yml](#docker-composeyml)
+- [Arquitetura](#arquitetura)
+- [Spring Security](#spring-security)
 
-<h3>Application.yml</h3>
+---
 
-Configuração interna do sistema.
+### 📄 Application.yml
+
+Configuração de conexão com o banco de dados:
 
 ```yaml
 spring:
@@ -55,12 +58,11 @@ spring:
     enabled: true
   locations:
     classpath: db/migration
-
 ```
 
-<h3>docker-compose.yml</h3>
+### 🐳 docker-compose.yml
 
-Criação do container `Docker`
+Criação dos containers Docker:
 
 ```yaml
 services:
@@ -94,19 +96,20 @@ services:
 networks:
   technology-conference-network:
     driver: bridge
-
 ```
 
-<h2>Arquitetura</h2>
-XXXXX:
+### 🧱 Arquitetura
 
-<h2>Features</h2>
-XXXXX:
+![arquitetura.png](src/main/resources/static/img/arquitetura.png)
 
-<h2>Spring Security</h2>
+### 🔐 Spring Security
 
-XXXXXX
+A aplicação utiliza o Spring Security com autenticação do tipo Basic Auth.
 
-<h3>Tela de login</h3>
+⚠️ Nota: Essa autenticação é básica e está sendo usada apenas em ambiente de desenvolvimento.
+
+📌 Em breve: será implementado login com Google (OAuth 2.0) usando integração com o Google Cloud Identity, permitindo autenticação segura com contas Google.
+
+### 🖥️ Tela de Login
 
 ![foto-login.svg](src/main/resources/static/img/foto-login.svg)
