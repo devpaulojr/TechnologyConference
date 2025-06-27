@@ -9,16 +9,13 @@
   <img src="https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=fff" alt="Docker" />
 </div>
 
----
-
 ## 🚀 Vamos começar
+Vamos começar com a lista de pré-requisito
 
 ### 🔧 Pré-requisitos
 
 - [Java SDK 21](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html)
 - [Docker Desktop](https://www.docker.com/get-started/)
-
----
 
 ## ⚙️ Particularidades do sistema
 
@@ -28,14 +25,12 @@
 
 ## 📚 Tabela de Conteúdos
 
-- [Application.yml](#applicationyml)
-- [docker-compose.yml](#docker-composeyml)
+- [Application YML](#application-yml)
+- [Docker Compose YML](#docker-compose-yml)
 - [Arquitetura](#arquitetura)
 - [Spring Security](#spring-security)
 
----
-
-### 📄 Application.yml
+### Application YML
 
 Configuração de conexão com o banco de dados:
 
@@ -60,7 +55,7 @@ spring:
     classpath: db/migration
 ```
 
-### 🐳 docker-compose.yml
+### Docker Compose YML
 
 Criação dos containers Docker:
 
@@ -98,11 +93,13 @@ networks:
     driver: bridge
 ```
 
-### 🧱 Arquitetura
+### Arquitetura
+
+Arquitetura do projeto de ser instânciado na memória da seguinte forma:
 
 ![arquitetura.png](src/main/resources/static/img/arquitetura.png)
 
-### 🔐 Spring Security
+### Spring Security
 
 A aplicação utiliza o Spring Security com autenticação do tipo Basic Auth.
 
